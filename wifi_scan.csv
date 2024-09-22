@@ -1,0 +1,4 @@
+Channel,SSID,Signal Strength,Frequency (GHz),Band,Encryption,WPA
+2,Space,-27,2.417,2.4 GHz,on,WPA2
+161,Space,-29,5.805,5 GHz,on,WPA2
+2,[Hidden Network],-27,2.417,2.4 GHz,on,WPA2
