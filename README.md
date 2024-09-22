@@ -16,30 +16,19 @@ sudo python3 ascii-wifi-11.py<br>
 Creates a file named: wifi_scan.csv<br>
 This is overwritten each time script is run<br>
 Optional Arguments:<br>
-
-    Specify an interface:
-
-    bash
-
-sudo python3 wifi_analyzer.py -i wlan0
-
-Specify output file name:
-
-bash
-
-sudo python3 wifi_analyzer.py -o my_wifi_scan.csv
-
-Include hidden networks:
-
-bash
-
-sudo python3 wifi_analyzer.py --show-hidden
-
-Enable verbose output:
-
-bash
-
-sudo python3 wifi_analyzer.py -v
+<br>
+Specify an interface:<br>
+sudo python3 wifi_analyzer.py -i wlan0<br>
+<br>
+Specify output file name:<br>
+sudo python3 wifi_analyzer.py -o my_wifi_scan.csv<br>
+<br>
+Include hidden networks:<br>
+sudo python3 wifi_analyzer.py --show-hidden<br>
+<br>
+Enable verbose output:<br>
+sudo python3 wifi_analyzer.py -v<br>
+<br>
 <br>
 DISCLAIMER:
 
