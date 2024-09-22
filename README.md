@@ -2,21 +2,19 @@ Another wifi scanner<br>
 <br>
 Built on Linux Mint 21.2 using Python 3.10.12<br>
 <br>
-Install various required things<br>
+<b>I</b>nstall various required things<br>
 sudo apt install wireless-tools<br>
-<br>
 sudo pip3 install termcolor<br>
-<br>
 sudo pip3 install colorama<br>
 <br>
-Syntax and whatnot<br>
+<b>S</b>yntax and whatnot<br>
 chmod +x ascii-wifi-11.py<br>
 sudo python3 ascii-wifi-11.py<br>
 <br>
 Creates a file named: wifi_scan.csv<br>
 This is overwritten each time script is run<br>
 <br>
-Optional Arguments:<br>
+<b>O</b>ptional Arguments:<br>
 <br>
 Specify an interface:<br>
 sudo python3 wifi_analyzer.py -i wlan0<br>
