@@ -18,23 +18,25 @@ import argparse
 import logging
 import csv
 import shutil
-from collections import defaultdict
 from termcolor import colored
 from colorama import init
 
 # Initialize colorama
 init()
 
+
 def setup_logging(verbosity):
     """Sets up logging based on the verbosity level."""
     level = logging.DEBUG if verbosity else logging.INFO
     logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+
 
 def check_command_availability(command):
     """Checks if a command is available on the system."""
     if shutil.which(command) is None:
         logging.error(f"Required command '{command}' not found. Please install it and try again.")
         sys.exit(1)
+
 
 def detect_wifi_interface(interface=None):
     """Detects the active WiFi interface using iwconfig or uses the provided one."""
@@ -54,6 +56,7 @@ def detect_wifi_interface(interface=None):
     logging.error("No WiFi interface detected.")
     sys.exit(1)
 
+
 def scan_wifi(interface):
     """Scans WiFi networks using the detected interface and returns raw output."""
     logging.info(f"Scanning for WiFi networks on interface '{interface}'...")
@@ -64,6 +67,7 @@ def scan_wifi(interface):
     except subprocess.CalledProcessError as e:
         logging.error(f"Error scanning WiFi networks: {e}")
         sys.exit(1)
+
 
 def parse_wifi_scan(scan_output, show_hidden=True):
     """
@@ -111,6 +115,7 @@ def parse_wifi_scan(scan_output, show_hidden=True):
         networks.append(network)
     return networks
 
+
 def signal_color(signal_level):
     """Returns a colorized string based on signal strength."""
     if signal_level >= -50:
@@ -121,6 +126,7 @@ def signal_color(signal_level):
         return colored(f"{signal_level} dBm", "light_yellow")
     else:
         return colored(f"{signal_level} dBm", "red")
+
 
 def signal_bar_graph(signal_level):
     """Returns a colored bar based on signal strength."""
@@ -133,40 +139,42 @@ def signal_bar_graph(signal_level):
     else:
         return colored("█" * 4, "red")
 
+
 def fancy_header(title):
     """Returns a fancy header."""
     return colored(f"\n{'=' * 80}\n{title.center(80)}\n{'=' * 80}", "cyan", attrs=["bold"])
 
-def display_networks(networks):
+
+def format_network_info(net):
+    """Formats network information for display."""
+    ssid = colored(net['ssid'], 'cyan', attrs=['bold'])
+    signal = signal_color(net['signal'])
+    channel = colored(net['channel'], 'yellow', attrs=['bold'])
+    freq = net['frequency']
+    band = net['band']
+    encryption = net.get('encryption', 'off')
+    wpa = net.get('wpa', 'None')
+    return ssid, signal, channel, freq, band, encryption, wpa
+
+
+def display_networks(sorted_networks):
     """Displays networks sorted by signal strength."""
     print(fancy_header("WiFi Networks"))
-    sorted_networks = sorted(networks, key=lambda x: x['signal'], reverse=True)
     for net in sorted_networks:
-        ssid = colored(net['ssid'], 'cyan', attrs=['bold'])
-        signal = signal_color(net['signal'])
-        channel = colored(net['channel'], 'yellow', attrs=['bold'])
-        freq = net['frequency']
-        band = net['band']
-        encryption = net.get('encryption', 'off')
-        wpa = net.get('wpa', 'None')
+        ssid, signal, channel, freq, band, encryption, wpa = format_network_info(net)
         print(f"Channel {channel}: {ssid} ({signal}, {freq} GHz, {band}, Encryption: {encryption}, WPA: {wpa})\n")
     print("=" * 80)
 
-def display_signal_strength_graph(networks):
+
+def display_signal_strength_graph(sorted_networks):
     """Displays a signal strength graph."""
     print(fancy_header("WiFi Signal Strength Graph"))
-    sorted_networks = sorted(networks, key=lambda x: x['signal'], reverse=True)
     for net in sorted_networks:
-        ssid = colored(net['ssid'], 'cyan', attrs=['bold'])
+        ssid, signal, channel, freq, band, encryption, wpa = format_network_info(net)
         signal_bar = signal_bar_graph(net['signal'])
-        signal = signal_color(net['signal'])
-        channel = colored(net['channel'], 'yellow', attrs=['bold'])
-        freq = net['frequency']
-        band = net['band']
-        encryption = net.get('encryption', 'off')
-        wpa = net.get('wpa', 'None')
         print(f"Channel {channel}: {signal_bar} {ssid} ({signal}, {freq} GHz, {band}, Encryption: {encryption}, WPA: {wpa})\n")
     print("=" * 80)
+
 
 def log_to_csv(networks, filename):
     """Logs the scan results to a CSV file."""
@@ -189,6 +197,7 @@ def log_to_csv(networks, filename):
     except IOError as e:
         logging.error(f"Failed to write to file {filename}: {e}")
 
+
 def parse_arguments():
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser(description="WiFi Analyzer Script")
@@ -197,6 +206,7 @@ def parse_arguments():
     parser.add_argument('--show-hidden', action='store_true', help='Include hidden networks in the scan')
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output (debug mode)')
     return parser.parse_args()
+
 
 def main():
     args = parse_arguments()
@@ -213,9 +223,15 @@ def main():
     if not networks:
         logging.warning("No networks found.")
         sys.exit(0)
-    display_networks(networks)
-    display_signal_strength_graph(networks)
-    log_to_csv(networks, args.output)
+
+    # Sort networks once here
+    sorted_networks = sorted(networks, key=lambda x: x['signal'], reverse=True)
+
+    # Pass the sorted list to display functions
+    display_networks(sorted_networks)
+    display_signal_strength_graph(sorted_networks)
+    log_to_csv(sorted_networks, args.output)
+
 
 if __name__ == "__main__":
     main()
