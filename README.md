@@ -15,6 +15,8 @@ sudo python3 ascii-wifi{version}.py<br>
 Creates a file named: wifi_scan.csv<br>
 This is overwritten each time script is run<br>
 <br>
+You can rename the .py anything you wish<br>
+<br>
 <b>O</b>ptional Arguments:<br>
 <br>
 Specify an interface:<br>
