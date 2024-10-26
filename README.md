@@ -6,10 +6,11 @@ Built on Linux Mint 21.2 using Python 3.10.12<br>
 sudo apt install wireless-tools<br>
 sudo pip3 install termcolor<br>
 sudo pip3 install colorama<br>
+You can also use: pip install -r requirements.txt<br>
 <br>
 <b>S</b>yntax and whatnot<br>
-chmod +x ascii-wifi-11.py<br>
-sudo python3 ascii-wifi-11.py<br>
+chmod +x ascii-wifi{version}.py<br>
+sudo python3 ascii-wifi{version}.py<br>
 <br>
 Creates a file named: wifi_scan.csv<br>
 This is overwritten each time script is run<br>
